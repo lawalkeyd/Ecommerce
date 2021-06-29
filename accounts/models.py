@@ -39,32 +39,30 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractUser):
+    """
+    Custom User Model where email is used as the username field
+    """
     USERNAME_FIELD = 'email'
     username = None
-    email = models.EmailField(unique=True) # changes email to unique and blank to false
     REQUIRED_FIELDS = []
-
-    objects = CustomUserManager()
-
-    def __str__(self):
-        return self.email
-
-class CustomerProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    name = models.CharField(max_length=45)
-    wishlist = models.ManyToManyField(Product, blank=True)
+    email = models.EmailField(unique=True) # changes email to unique and blank to false
+    wishlist = models.ManyToManyField(Product, blank=True, null=True)
     first_order = models.DateField(default=timezone.now)
     last_order = models.DateField(default=timezone.now)
 
     def average_order_value(self):
-        order_list = [order.get_total_cost() for order in self.orders.all if order.paid]
+        order_list = [order.total_value() for order in self.orders.all if order.paid]
         return sum(order_list) / len(order_list)
 
-    def get_first_order(self):
-        return self.orders.filter(paid = False).first().values_only('created')    
+    def first_order_date(self):
+        return self.orders.filter(paid = True).first().values_only('created')    
 
-    def get_last_order(self):
-        return self.orders.filter(paid = False).last().values_only('created')   
+    def last_order_date(self):
+        return self.orders.filter(paid = True).last().values_only('created')     
+
+    objects = CustomUserManager()
+
 
     def __str__(self):
-        return self.name
+        return self.email
+
