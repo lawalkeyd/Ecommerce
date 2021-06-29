@@ -4,6 +4,7 @@ from .serializers import UserSerializer, ViewCustomersSerializer
 from django.contrib.auth import authenticate
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
+from .models import CustomUser
 
 
 class RegisterCustomer(generics.CreateAPIView):
@@ -24,6 +25,6 @@ class LoginView(APIView):
             return Response({"error": "Wrong Credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
 class ViewCustomerView(generics.ListAPIView):
-    queryset = CustomerProfile.objects.all()
+    queryset = CustomUser.objects.all()
     permission_classes = [IsAdminUser]
     serializer_class = ViewCustomersSerializer

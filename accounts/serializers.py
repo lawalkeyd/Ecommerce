@@ -16,20 +16,9 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('email', 'password',)
         extra_kwargs = {'password': {'write_only': True}}
 
-# class CustomerSerializer(serializers.ModelSerializer):
-#     user = UserSerializer(many=True)
-
-#     class Meta:
-#         model = CustomerProfile
-#         fields = ['name', 'user']
-
-#     def create(self, validated_data):
-#         profile_data = validated_data.pop('user')
-#         user = CustomUser.objects.create(**validated_data)
-#         customer = CustomerProfile(user=user, **profile_data)
-#         return customer        
+     
 
 class ViewCustomersSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CustomerProfile
-        fields = ('user', 'wishlist') 
+        model = CustomUser
+        fields = ('email', 'wishlist') 
