@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.utils import timezone
 from decimal import InvalidOperation
+from products.serializers import ProductSerializer
 
 
 class ViewOrder(APIView):
@@ -74,5 +75,29 @@ class CompletedOrder(APIView):
             items.product.inventory -= 1
         return Response({"completed": True})      
 
+class addWishlist(APIView):
+    '''
+    View to add Wishlist Items
+    '''
+    permission_classes = [IsAuthenticated]    
+    def post(self, request):
+        id = request.data.get('id')
+        item = get_object_or_404(Product, id=id)
+        if request.user.wishlist.filter(id=item.id).exists():
+            request.user.wishlist.add(item)
+        serial = ProductSerializer(item)    
+        return Response(serial.data)    
 
+class RemoveWishlist(APIView):
+    '''
+    View to remove Wishlist Items
+    '''
+    permission_classes = [IsAuthenticated]    
+    def post(self, request):
+        id = request.data.get('id')
+        item = get_object_or_404(Product, id=id)
+        if request.user.wishlist.filter(id=item.id).exists():
+            request.user.wishlist.remove(item)
+        serial = ProductSerializer(item)    
+        return Response(serial.data)           
         
