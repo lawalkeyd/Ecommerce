@@ -59,6 +59,20 @@ class RemoveOrder(APIView):
         id = request.data.get('id')
         order_item= get_object_or_404(OrderItem, id=id)
         order_item.delete()
-        return Response({"deleted": True})                
-  
+        return Response({"deleted": True})   
+
+class CompletedOrder(APIView):
+    '''
+    Post- Payment View
+    '''          
+    def post(self,request):           
+        permission_classes = [IsAuthenticated]
+        id  = request.data.get('id')
+        order = get_object_or_404(Order, id = id)
+        order.paid = True
+        for items in order.items.all():
+            items.product.inventory -= 1
+        return Response({"completed": True})      
+
+
         
