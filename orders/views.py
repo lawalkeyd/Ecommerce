@@ -8,6 +8,8 @@ from rest_framework.views import APIView
 from django.utils import timezone
 from decimal import InvalidOperation
 from products.serializers import ProductSerializer
+from rest_framework import generics
+
 
 
 class ViewOrder(APIView):
@@ -99,5 +101,13 @@ class RemoveWishlist(APIView):
         if request.user.wishlist.filter(id=item.id).exists():
             request.user.wishlist.remove(item)
         serial = ProductSerializer(item)    
-        return Response(serial.data)           
+        return Response(serial.data)      
+
+class ViewProduct(generics.RetrieveAPIView):
+    serializer_class = ProductSerializer
+    model  = Product             
+
+    def get_queryset(self):
+        user = self.request.user
+        return user.wishlist.all()
         
