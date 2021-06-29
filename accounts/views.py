@@ -1,4 +1,3 @@
-from .models import CustomerProfile
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from .serializers import UserSerializer, ViewCustomersSerializer
