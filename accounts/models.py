@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.conf import settings
 from products.models import Product
 from django.utils import timezone
+from django.utils.translation import gettext as _
 
 
 class CustomUserManager(BaseUserManager):
