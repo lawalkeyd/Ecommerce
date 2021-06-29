@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAdminUser
 # Create your views here.
 class ViewProduct(generics.RetrieveAPIView):
     serializer_class = ProductSerializer
+    queryset = Product.objects.all()
     model  = Product
 
 class ProductList(generics.ListAPIView):
